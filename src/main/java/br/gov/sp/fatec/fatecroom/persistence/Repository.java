@@ -20,6 +20,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import br.gov.sp.fatec.fatecroom.logging.Logger;
+import br.gov.sp.fatec.fatecroom.utils.FileUtils;
 
 final class Repository {
     private Repository() { }
@@ -49,6 +50,15 @@ final class Repository {
         for (int i = 0; i < headers.length; i++)
             values[i] = entry.getOrDefault(headers[i], "");
         
+        return String.join(",", values);
+    }
+
+    private static String mapToLine(Map<String, String> entry) {
+        final var values = new String[entry.size()];
+        int i = 0;
+        for (var key : entry.keySet()) {
+            values[i++] = entry.get(key);
+        }
         return String.join(",", values);
     }
 
@@ -154,6 +164,22 @@ final class Repository {
         }
 
         return updated ? UPDATE_CODE : INSERT_CODE;
+    }
+
+    public static void insertEnsuringUniqueness(String filename, Map<String, String> data, Function<Map<String, String>, String> keySelector) throws IOException {
+        if (filename == null || filename.isBlank())
+            throw new IllegalArgumentException("Filename cannot be null or blank.");
+        if (data == null || data.isEmpty())
+            throw new IllegalArgumentException("Data cannot be null or empty.");
+        if (keySelector == null)
+            throw new IllegalArgumentException("Key selector cannot be null.");
+
+        var existingEntry = getByKey(filename, keySelector.apply(data), keySelector);
+        if (existingEntry.isPresent()) {
+            throw new IllegalArgumentException("An entry with the same key already exists: " + keySelector.apply(data));
+        }
+
+        FileUtils.appendLineTo(getOrCreate(filename), mapToLine(data));
     }
 
     /**
