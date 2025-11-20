@@ -77,56 +77,11 @@ final class Repository {
         return file;
     }
 
-    private static void tryMoveAtomicallyOrReplacing(Path source, Path target) throws IOException {
-        try {
-            Files.move(source, target, StandardCopyOption.ATOMIC_MOVE);
-        } catch (AtomicMoveNotSupportedException _) {
-            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
-        }
-    }
-
     private static void replaceFile(File original, File replacement) throws IOException {
-        var originalPath = original.toPath();
-        var replacementPath = replacement.toPath();
-
-        // backup path next to original
-        var backup = originalPath.resolveSibling(originalPath.getFileName().toString() + ".bak." + UUID.randomUUID());
-
-        // If original doesn't exist, move replacement into place directly
-        if (!Files.exists(originalPath)) {
-            tryMoveAtomicallyOrReplacing(replacementPath, originalPath);
-            return;
-        }
-
         try {
-            // 1) move original -> backup
-            tryMoveAtomicallyOrReplacing(originalPath, backup);
-
-            // 2) move replacement -> original (replace if present)
-            tryMoveAtomicallyOrReplacing(replacementPath, originalPath);
-
-            // 3) delete backup
-            Files.deleteIfExists(backup);
-        } catch (IOException e) {
-            Logger.logNow(Authentication.getLoggedInUserEmail(), "REPLACE_FILE", "Error replacing file: %s\nAttempting rollback.".formatted(e.getMessage()));
-
-            // rollback: try to restore backup back to original
-            try {
-                if (Files.exists(backup) && !Files.exists(originalPath))
-                    Files.move(backup, originalPath, StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException ex) {
-                Logger.logNow(Authentication.getLoggedInUserEmail(), "REPLACE_FILE", "Error during rollback: %s".formatted(ex.getMessage()));
-
-                e.addSuppressed(ex);
-            }
-            throw e;
-        } finally {
-            // best-effort: remove any leftover replacement file
-            try {
-                Files.deleteIfExists(replacementPath);
-            } catch (IOException ex) {
-                Logger.logNow(Authentication.getLoggedInUserEmail(), "REPLACE_FILE", "Error deleting temp file: %s".formatted(ex.getMessage()));
-            }
+            Files.move(replacement.toPath(), original.toPath(), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        } catch (AtomicMoveNotSupportedException e) {
+            Files.move(replacement.toPath(), original.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
