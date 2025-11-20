@@ -654,6 +654,159 @@ public class RepositoryTests {
         }
     }
 
+    private static void getRangeByPredicate_shouldThrowIllegalArgumentException_whenFilenameIsNull() {
+        try {
+            Repository.getRangeByPredicate(null, entry -> true, 0, 10);
+            System.err.println("Test failed: Expected IllegalArgumentException was not thrown.");
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().contains("cannot be null")) {
+                System.out.println("Test passed: Caught expected IllegalArgumentException for null filename.");
+            } else {
+                System.err.println("Test failed: Caught IllegalArgumentException, but with unexpected message: " + e.getMessage());
+            }
+        } catch (Exception e) {
+            System.err.println("Test failed: Caught unexpected exception type: " + e);
+        }
+    }
+
+    private static void getRangeByPredicate_shouldThrowIllegalArgumentException_whenPredicateIsNull() {
+        Path tempFile = null;
+        try {
+            tempFile = createTempCsvFile();
+            Repository.getRangeByPredicate(tempFile.toString(), null, 0, 10);
+            System.err.println("Test failed: Expected IllegalArgumentException was not thrown.");
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().contains("cannot be null")) {
+                System.out.println("Test passed: Caught expected IllegalArgumentException for null predicate.");
+            } else {
+                System.err.println("Test failed: Caught IllegalArgumentException, but with unexpected message: " + e.getMessage());
+            }
+        } catch (Exception e) {
+            System.err.println("Test failed: Caught unexpected exception type: " + e);
+        } finally {
+            try {
+                deleteTempFile(tempFile);
+            } catch (IOException e) {
+                System.err.println("Warning: Could not delete temporary file: " + e);
+            }
+        }
+    }
+
+    private static void getRangeByPredicate_shouldThrowIllegalArgumentException_whenSkipIsNegative() {
+        Path tempFile = null;
+        try {
+            tempFile = createTempCsvFile();
+            Repository.getRangeByPredicate(tempFile.toString(), entry -> true, -1, 10);
+            System.err.println("Test failed: Expected IllegalArgumentException was not thrown.");
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().contains("must be non-negative")) {
+                System.out.println("Test passed: Caught expected IllegalArgumentException for negative skip.");
+            } else {
+                System.err.println("Test failed: Caught IllegalArgumentException, but with unexpected message: " + e.getMessage());
+            }
+        } catch (Exception e) {
+            System.err.println("Test failed: Caught unexpected exception type: " + e);
+        } finally {
+            try {
+                deleteTempFile(tempFile);
+            } catch (IOException e) {
+                System.err.println("Warning: Could not delete temporary file: " + e);
+            }
+        }
+    }
+
+    private static void getRangeByPredicate_shouldThrowIllegalArgumentException_whenTakeIsNotPositive() {
+        Path tempFile = null;
+        try {
+            tempFile = createTempCsvFile();
+            Repository.getRangeByPredicate(tempFile.toString(), entry -> true, 0, 0);
+            System.err.println("Test failed: Expected IllegalArgumentException was not thrown.");
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().contains("must be positive")) {
+                System.out.println("Test passed: Caught expected IllegalArgumentException for non-positive take.");
+            } else {
+                System.err.println("Test failed: Caught IllegalArgumentException, but with unexpected message: " + e.getMessage());
+            }
+        } catch (Exception e) {
+            System.err.println("Test failed: Caught unexpected exception type: " + e);
+        } finally {
+            try {
+                deleteTempFile(tempFile);
+            } catch (IOException e) {
+                System.err.println("Warning: Could not delete temporary file: " + e);
+            }
+        }
+    }
+
+    private static void getRangeByPredicate_shouldReturnEmptyList_whenFileIsEmpty() {
+        Path tempFile = null;
+        try {
+            tempFile = createTempCsvFile();
+            var result = Repository.getRangeByPredicate(tempFile.toString(), entry -> true, 0, 10);
+            if (result.isEmpty()) {
+                System.out.println("Test passed: getRangeByPredicate returned empty list for empty file.");
+            } else {
+                System.err.println("Test failed: getRangeByPredicate should return empty list for empty file.");
+            }
+        } catch (Exception e) {
+            System.err.println("Test failed: Caught unexpected exception: " + e);
+        } finally {
+            try {
+                deleteTempFile(tempFile);
+            } catch (IOException e) {
+                System.err.println("Warning: Could not delete temporary file: " + e);
+            }
+        }
+    }
+
+    private static void getRangeByPredicate_shouldReturnEmptyList_whenNoEntriesMatch() {
+        Path tempFile = null;
+        try {
+            tempFile = createTempCsvFile();
+            Repository.insertOrUpdate(tempFile.toString(), Map.of("key", "1", "name", "A"), KEY_SELECTOR);
+            Repository.insertOrUpdate(tempFile.toString(), Map.of("key", "2", "name", "B"), KEY_SELECTOR);
+            var result = Repository.getRangeByPredicate(tempFile.toString(), entry -> "NonExistent".equals(entry.get("name")), 0, 10);
+            if (result.isEmpty()) {
+                System.out.println("Test passed: getRangeByPredicate returned empty list when no entries match.");
+            } else {
+                System.err.println("Test failed: getRangeByPredicate should return empty list when no entries match. Result: " + result);
+            }
+        } catch (Exception e) {
+            System.err.println("Test failed: Caught unexpected exception: " + e);
+        } finally {
+            try {
+                deleteTempFile(tempFile);
+            } catch (IOException e) {
+                System.err.println("Warning: Could not delete temporary file: " + e);
+            }
+        }
+    }
+
+    private static void getRangeByPredicate_shouldReturnCorrectRange_whenEntriesExist() {
+        Path tempFile = null;
+        try {
+            tempFile = createTempCsvFile();
+            Repository.insertOrUpdate(tempFile.toString(), Map.of("key", "1", "name", "A"), KEY_SELECTOR);
+            Repository.insertOrUpdate(tempFile.toString(), Map.of("key", "2", "name", "B"), KEY_SELECTOR);
+            Repository.insertOrUpdate(tempFile.toString(), Map.of("key", "3", "name", "C"), KEY_SELECTOR);
+            Repository.insertOrUpdate(tempFile.toString(), Map.of("key", "4", "name", "D"), KEY_SELECTOR);
+            var result = Repository.getRangeByPredicate(tempFile.toString(), entry -> true, 1, 2);
+            if (result.size() == 2 && "B".equals(result.get(0).get("name")) && "C".equals(result.get(1).get("name"))) {
+                System.out.println("Test passed: getRangeByPredicate returned correct range.");
+            } else {
+                System.err.println("Test failed: getRangeByPredicate did not return correct range. Result: " + result);
+            }
+        } catch (Exception e) {
+            System.err.println("Test failed: Caught unexpected exception: " + e);
+        } finally {
+            try {
+                deleteTempFile(tempFile);
+            } catch (IOException e) {
+                System.err.println("Warning: Could not delete temporary file: " + e);
+            }
+        }
+    }
+
     public static void main(String[] args) {
         insertOrUpdate_shouldThrowIllegalArgumentException_whenFilenameIsNull();
         insertOrUpdate_shouldThrowIllegalArgumentException_whenDataIsNull();
@@ -683,5 +836,9 @@ public class RepositoryTests {
         getRange_shouldReturnCorrectRange_whenEntriesExist();
         getRange_shouldThrowIllegalArgumentException_whenSkipIsNegative();
         getRange_shouldThrowIllegalArgumentException_whenTakeIsNotPositive();
+        getRangeByPredicate_shouldThrowIllegalArgumentException_whenFilenameIsNull();
+        getRangeByPredicate_shouldThrowIllegalArgumentException_whenPredicateIsNull();
+        getRangeByPredicate_shouldReturnEmptyList_whenNoEntriesMatch();
+        getRangeByPredicate_shouldReturnCorrectRange_whenEntriesExist();
     }
 }
