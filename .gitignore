@@ -1,0 +1,42 @@
+# Compiled class files
+*.class
+
+# Output directory
+bin/
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# VSCode settings
+.vscode/
+
+# Eclipse settings
+.settings/
+.project
+.classpath
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+*~
