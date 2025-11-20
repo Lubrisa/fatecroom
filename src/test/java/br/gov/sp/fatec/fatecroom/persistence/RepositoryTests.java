@@ -101,15 +101,15 @@ public class RepositoryTests {
             tempFile = createTempCsvFile();
             Repository.insertOrUpdate(tempFile.toString(), SAMPLE_DATA, KEY_SELECTOR);
             var lines = Files.readAllLines(tempFile);
-            if (lines.size() >= 1) {
+            if (lines.isEmpty()) {
+                System.err.println("Test failed: No lines found in the file after insertOrUpdate.");
+            } else {
                 var headerKeySet = Set.of(lines.get(0).split(","));
                 if (headerKeySet.equals(SAMPLE_DATA.keySet())) {
                     System.out.println("Test passed: Header inserted successfully.");
                 } else {
                     System.err.println("Test failed: Header keys do not match. Expected: " + SAMPLE_DATA.keySet() + ", Found: " + headerKeySet);
                 }
-            } else {
-                System.err.println("Test failed: Header not inserted correctly. Lines: " + lines);
             }
         } catch (Exception e) {
             System.err.println("Test failed: Caught unexpected exception: " + e);
@@ -126,17 +126,19 @@ public class RepositoryTests {
         Path tempFile = null;
         try {
             tempFile = createTempCsvFile();
-            Repository.insertOrUpdate(tempFile.toString(), SAMPLE_DATA, KEY_SELECTOR);
+            var result = Repository.insertOrUpdate(tempFile.toString(), SAMPLE_DATA, KEY_SELECTOR);
             var lines = Files.readAllLines(tempFile);
-            if (lines.size() == 2) {
+            if (lines.isEmpty()) {
+                System.err.println("Test failed: No lines found in the file after insertOrUpdate.");
+            } else if (result != Repository.INSERT_CODE) {
+                System.err.println("Test failed: Expected INSERT_CODE but got different code: " + result);
+            } else {
                 try {
                     entryEquals(lines.get(1), SAMPLE_DATA);
                     System.out.println("Test passed: New entry inserted successfully.");
                 } catch (AssertionError e) {
                     System.err.println("Test failed: " + e.getMessage());
                 }
-            } else {
-                System.err.println("Test failed: Entry not inserted correctly. Lines: " + lines);
             }
         } catch (Exception e) {
             System.err.println("Test failed: Caught unexpected exception: " + e);
@@ -154,17 +156,19 @@ public class RepositoryTests {
         try {
             tempFile = createTempCsvFile();
             Repository.insertOrUpdate(tempFile.toString(), SAMPLE_DATA, KEY_SELECTOR);
-            Repository.insertOrUpdate(tempFile.toString(), UPDATED_DATA, KEY_SELECTOR);
+            var result = Repository.insertOrUpdate(tempFile.toString(), UPDATED_DATA, KEY_SELECTOR);
             var lines = Files.readAllLines(tempFile);
-            if (lines.size() == 2) {
+            if (lines.isEmpty()) {
+                System.err.println("Test failed: No lines found in the file after insertOrUpdate.");
+            } else if (result != Repository.UPDATE_CODE) {
+                System.err.println("Test failed: Expected UPDATE_CODE but got different code: " + result);
+            } else {
                 try {
                     entryEquals(lines.get(1), UPDATED_DATA);
                     System.out.println("Test passed: Existing entry updated successfully.");
                 } catch (AssertionError e) {
                     System.err.println("Test failed: " + e.getMessage());
                 }
-            } else {
-                System.err.println("Test failed: Entry not updated correctly. Lines: " + lines);
             }
         } catch (Exception e) {
             System.err.println("Test failed: Caught unexpected exception: " + e);
