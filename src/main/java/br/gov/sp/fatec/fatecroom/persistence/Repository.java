@@ -271,17 +271,19 @@ final class Repository {
     }
 
     /**
-     * Gets a range of entries.
-     * 
+     * Gets a range of entries matching a predicate.
      * @param filename The name of the file to search.
+     * @param predicate A predicate to test entries.
      * @param skip The number of entries to skip.
      * @param take The number of entries to take.
-     * @return A list of entries within the specified range.
+     * @return A list of entries within the specified range that match the predicate.
      * @throws IOException If an I/O error occurs during the operation.
      */
-    public static List<Map<String, String>> getRange(String filename, int skip, int take) throws IOException {
+    public static List<Map<String, String>> getRangeByPredicate(String filename, Predicate<Map<String, String>> predicate, int skip, int take) throws IOException {
         if (filename == null || filename.isBlank())
             throw new IllegalArgumentException("Filename cannot be null or blank.");
+        if (predicate == null)
+            throw new IllegalArgumentException("Predicate cannot be null.");
         if (skip < 0 || take <= 0)
             throw new IllegalArgumentException("Skip must be non-negative and take must be positive.");
 
@@ -303,16 +305,31 @@ final class Repository {
             String line;
             int index = 0;
             while ((line = reader.readLine()) != null) {
-                if (index >= skip && results.size() < take) {
-                    var entry = parseLine(line, headers);
-                    results.add(entry);
+                var entry = parseLine(line, headers);
+                if (predicate.test(entry)) {
+                    if (index >= skip && results.size() < take) {
+                        results.add(entry);
+                    }
+                    index++;
+                    if (results.size() >= take)
+                        break;
                 }
-                index++;
-                if (results.size() >= take)
-                    break;
             }
         }
 
         return results;
+    }
+
+    /**
+     * Gets a range of entries.
+     * 
+     * @param filename The name of the file to search.
+     * @param skip The number of entries to skip.
+     * @param take The number of entries to take.
+     * @return A list of entries within the specified range.
+     * @throws IOException If an I/O error occurs during the operation.
+     */
+    public static List<Map<String, String>> getRange(String filename, int skip, int take) throws IOException {
+        return getRangeByPredicate(filename, entry -> true, skip, take);
     }
 }
