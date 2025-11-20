@@ -842,6 +842,9 @@ public class RepositoryTests {
         getRange_shouldThrowIllegalArgumentException_whenTakeIsNotPositive();
         getRangeByPredicate_shouldThrowIllegalArgumentException_whenFilenameIsNull();
         getRangeByPredicate_shouldThrowIllegalArgumentException_whenPredicateIsNull();
+        getRangeByPredicate_shouldThrowIllegalArgumentException_whenSkipIsNegative();
+        getRangeByPredicate_shouldThrowIllegalArgumentException_whenTakeIsNotPositive();
+        getRangeByPredicate_shouldReturnEmptyList_whenFileIsEmpty();
         getRangeByPredicate_shouldReturnEmptyList_whenNoEntriesMatch();
         getRangeByPredicate_shouldReturnCorrectRange_whenEntriesExist();
     }
