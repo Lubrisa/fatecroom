@@ -84,6 +84,9 @@ final class Repository {
         }
     }
 
+    public static final int INSERT_CODE = 1;
+    public static final int UPDATE_CODE = 2;
+
     /**
      * Inserts a new entry or updates an existing one based on the key selector.
      * 
@@ -92,7 +95,7 @@ final class Repository {
      * @param keySelector A function to select the key from the entry data.
      * @throws IOException If an I/O error occurs during the operation.
      */
-    public static void insertOrUpdate(String filename, Map<String, String> data, Function<Map<String, String>, String> keySelector) throws IOException {
+    public static int insertOrUpdate(String filename, Map<String, String> data, Function<Map<String, String>, String> keySelector) throws IOException {
         if (filename == null || filename.isBlank())
             throw new IllegalArgumentException("Filename cannot be null or blank.");
         if (data == null || data.isEmpty())
@@ -149,6 +152,8 @@ final class Repository {
         } finally {
             replaceFile(file, temp);
         }
+
+        return updated ? UPDATE_CODE : INSERT_CODE;
     }
 
     /**
