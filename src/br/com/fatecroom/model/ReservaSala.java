@@ -96,7 +96,6 @@ public class ReservaSala {
         this.observacao = observacao;
     }
 
-    // ==== CSV helpers ====
 
     public String toCsv() {
         return String.join(";",

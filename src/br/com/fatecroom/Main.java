@@ -7,10 +7,7 @@ import br.com.fatecroom.ui.reserva.ReservaSalaQueryFrame;
 
 import javax.swing.*;
 
-/**
- * Main de teste para o módulo de Reservas (Grupo 7).
- * Usa um service em memória (ReservaSalaServiceMock).
- */
+//Mock criado para substituir o Repository que será preenchido com os commits do Luigi
 public class Main {
 
     public static void main(String[] args) {

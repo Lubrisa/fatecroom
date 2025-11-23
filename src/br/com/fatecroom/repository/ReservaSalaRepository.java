@@ -5,10 +5,7 @@ import br.com.fatecroom.model.ReservaSala;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * STUB TEMPORÁRIO para permitir compilar e testar a UI.
- * Seu colega depois pode substituir por uma implementação real com CSV.
- */
+//Substituir pelo código de terceiros
 public class ReservaSalaRepository {
 
     private final List<ReservaSala> reservas = new ArrayList<>();

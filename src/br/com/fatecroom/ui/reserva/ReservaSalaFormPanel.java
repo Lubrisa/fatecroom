@@ -7,10 +7,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-/**
- * Formulário de cadastro/edição de Reserva de Sala/Laboratório.
- * Foca em UI mais moderna, com card e espaçamento.
- */
+
 public class ReservaSalaFormPanel extends JPanel implements Form<ReservaSala> {
 
     private JTextField txtIdSala;

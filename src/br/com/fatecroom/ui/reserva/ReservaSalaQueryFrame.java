@@ -5,9 +5,7 @@ import br.com.fatecroom.service.ReservaSalaService;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Janela que encapsula a tela de consulta avançada de reservas.
- */
+
 public class ReservaSalaQueryFrame extends JFrame {
 
     public ReservaSalaQueryFrame(ReservaSalaService service) {

@@ -161,7 +161,7 @@ public class ReservaSalaQueryPanel extends JPanel {
     }
 
     /**
-     * Retorna a reserva selecionada na tabela (pode ser útil para cancelar).
+     * Esse cara retorna a reserva que foi selecionada :)
      */
     public ReservaSala getReservaSelecionada() {
         return queryResult.getSelected();

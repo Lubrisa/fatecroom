@@ -7,10 +7,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.function.Function;
 
-/**
- * Componente genérico para exibir resultados de consulta em uma JTable.
- * UI "moderna" com card e sorter automático.
- */
+
 public class QueryResult<T> extends JPanel {
 
     private JTable table;
