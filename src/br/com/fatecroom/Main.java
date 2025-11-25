@@ -1,4 +1,4 @@
-package br.com.fatecroom;
+ package br.com.fatecroom;
 
 import br.com.fatecroom.service.ReservaSalaService;
 import br.com.fatecroom.service.ReservaSalaServiceMock;
