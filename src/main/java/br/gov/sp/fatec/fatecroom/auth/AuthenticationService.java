@@ -46,4 +46,11 @@ public class AuthenticationService {
     public static String getLoggedInUserEmail() {
         return loggedInUserEmail;
     }
+
+    /**
+     * Clears the logged-in user session.
+     */
+    public static void clearSession() {
+        loggedInUserEmail = null;
+    }
 }
