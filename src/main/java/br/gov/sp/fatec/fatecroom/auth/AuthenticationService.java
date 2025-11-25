@@ -3,7 +3,7 @@ package br.gov.sp.fatec.fatecroom.auth;
 /**
  * Handles user authentication by validating and storing the email of the logged-in user.
  */
-public class Authentication {
+public class AuthenticationService {
     private static final String FATEC_DOMAIN = "@fatec.sp.gov.br";
 
     private static String loggedInUserEmail = null;

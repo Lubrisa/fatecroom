@@ -3,7 +3,7 @@ package br.gov.sp.fatec.fatecroom.auth;
 public class AuthenticationTests {
     private static void setLoggedInUserEmail_shouldThrowIllegalArgumentException_whenEmailIsNull() {
         try {
-            Authentication.setLoggedInUserEmail(null);
+            AuthenticationService.setLoggedInUserEmail(null);
             System.err.println("Test failed: Expected IllegalArgumentException was not thrown.");
         } catch (IllegalArgumentException e) {
             if (e.getMessage().contains("null")) {
@@ -16,7 +16,7 @@ public class AuthenticationTests {
 
     private static void setLoggedInUserEmail_shouldThrowIllegalArgumentException_whenEmailIsBlank() {
         try {
-            Authentication.setLoggedInUserEmail("   ");
+            AuthenticationService.setLoggedInUserEmail("   ");
             System.err.println("Test failed: Expected IllegalArgumentException was not thrown.");
         } catch (IllegalArgumentException e) {
             if (e.getMessage().contains("empty")) {
@@ -29,7 +29,7 @@ public class AuthenticationTests {
 
     private static void setLoggedInUserEmail_shouldThrowIllegalArgumentException_whenEmailIsNotInFatecDomain() {
         try {
-            Authentication.setLoggedInUserEmail("user@example.com");
+            AuthenticationService.setLoggedInUserEmail("user@example.com");
             System.err.println("Test failed: Expected IllegalArgumentException was not thrown.");
         } catch (IllegalArgumentException e) {
             if (e.getMessage().contains("FATEC domain")) {
@@ -42,7 +42,7 @@ public class AuthenticationTests {
 
     private static void setLoggedInUserEmail_shouldThrowIllegalArgumentException_whenEmailLocalPartIsEmpty() {
         try {
-            Authentication.setLoggedInUserEmail("@fatec.sp.gov.br");
+            AuthenticationService.setLoggedInUserEmail("@fatec.sp.gov.br");
             System.err.println("Test failed: Expected IllegalArgumentException was not thrown.");
         } catch (IllegalArgumentException e) {
             if (e.getMessage().contains("local part cannot be empty")) {
@@ -56,7 +56,7 @@ public class AuthenticationTests {
     private static void setLoggedInUserEmail_shouldSetEmailSuccessfully_whenEmailIsValid() {
         String validEmail = "user@fatec.sp.gov.br";
         try {
-            Authentication.setLoggedInUserEmail(validEmail);
+            AuthenticationService.setLoggedInUserEmail(validEmail);
             System.out.println("Test passed: Email set successfully for valid email.");
         } catch (IllegalArgumentException e) {
             System.err.println("Test failed: Unexpected IllegalArgumentException for valid email: " + e.getMessage());
@@ -64,7 +64,7 @@ public class AuthenticationTests {
     }
 
     private static void getLoggedInUserEmail_shouldReturnNull_whenNoUserIsLoggedIn() {
-        String email = Authentication.getLoggedInUserEmail();
+        String email = AuthenticationService.getLoggedInUserEmail();
         if (email == null) {
             System.out.println("Test passed: getLoggedInUserEmail returned null when no user is logged in.");
         } else {
@@ -75,8 +75,8 @@ public class AuthenticationTests {
     private static void getLoggedInUserEmail_shouldReturnEmail_whenUserIsLoggedIn() {
         String validEmail = "user@fatec.sp.gov.br";
         try {
-            Authentication.setLoggedInUserEmail(validEmail);
-            String email = Authentication.getLoggedInUserEmail();
+            AuthenticationService.setLoggedInUserEmail(validEmail);
+            String email = AuthenticationService.getLoggedInUserEmail();
             if (validEmail.equals(email)) {
                 System.out.println("Test passed: getLoggedInUserEmail returned the correct email when user is logged in.");
             } else {
