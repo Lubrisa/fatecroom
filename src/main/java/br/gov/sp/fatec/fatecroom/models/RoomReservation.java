@@ -10,18 +10,18 @@ import java.util.Map;
 public class RoomReservation {
     private RoomReservation() {}
 
-    private static final String ID_FIELD = "id_reserva";
-    private static final String ROOM_ID_FIELD = "id_sala";
-    private static final String USER_ID_FIELD = "id_usuario";
-    private static final String DATE_FIELD = "data_reserva";
-    private static final String START_TIME_FIELD = "hora_inicio";
-    private static final String END_TIME_FIELD = "hora_fim";
-    private static final String STATUS_FIELD = "status";
-    private static final String OBSERVATION_FIELD = "observacao";
+    public static final String ID_FIELD = "id_reserva";
+    public static final String ROOM_ID_FIELD = "id_sala";
+    public static final String USER_ID_FIELD = "id_usuario";
+    public static final String DATE_FIELD = "data_reserva";
+    public static final String START_TIME_FIELD = "hora_inicio";
+    public static final String END_TIME_FIELD = "hora_fim";
+    public static final String STATUS_FIELD = "status";
+    public static final String OBSERVATION_FIELD = "observacao";
 
-    private static final String ACTIVE_STATUS = "ATIVA";
-    private static final String CANCELLED_STATUS = "CANCELADA";
-    private static final List<String> VALID_STATUSES = List.of(
+    public static final String ACTIVE_STATUS = "ATIVA";
+    public static final String CANCELLED_STATUS = "CANCELADA";
+    public static final List<String> VALID_STATUSES = List.of(
         ACTIVE_STATUS,
         CANCELLED_STATUS
     );

@@ -5,12 +5,12 @@ import java.util.Map;
 public class Resource {
     private Resource() {}
 
-    private static final String ID_FIELD = "id_recurso";
-    private static final String NAME_FIELD = "nome_recurso";
-    private static final String RESOURCE_TYPE_FIELD = "tipo_recurso";
-    private static final String PATRIMONY_FIELD = "patrimonio";
-    private static final String DEFAULT_LOCATION_FIELD = "local_padrao";
-    private static final String OBSERVATION_FIELD = "observacao";
+    public static final String ID_FIELD = "id_recurso";
+    public static final String NAME_FIELD = "nome_recurso";
+    public static final String RESOURCE_TYPE_FIELD = "tipo_recurso";
+    public static final String PATRIMONY_FIELD = "patrimonio";
+    public static final String DEFAULT_LOCATION_FIELD = "local_padrao";
+    public static final String OBSERVATION_FIELD = "observacao";
     
 
     public static final String PROJECTOR_TYPE = "PROJETOR";
