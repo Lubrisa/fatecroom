@@ -179,7 +179,14 @@ final class Repository {
             throw new IllegalArgumentException("An entry with the same key already exists: " + keySelector.apply(data));
         }
 
-        FileUtils.appendLineTo(getOrCreate(filename), mapToLine(data));
+        var file = getOrCreate(filename);
+
+        if (file.length() == 0) {
+            // write headers
+            FileUtils.appendLineTo(file, headersOf(data));
+        }
+        
+        FileUtils.appendLineTo(file, mapToLine(data));
     }
 
     /**
