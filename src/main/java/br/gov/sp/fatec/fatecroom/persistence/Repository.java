@@ -1,6 +1,6 @@
 package br.gov.sp.fatec.fatecroom.persistence;
 
-import br.gov.sp.fatec.fatecroom.auth.Authentication;
+import br.gov.sp.fatec.fatecroom.auth.AuthenticationService;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -113,12 +113,12 @@ final class Repository {
         if (keySelector == null)
             throw new IllegalArgumentException("Key selector cannot be null.");
 
-        Logger.logNow(Authentication.getLoggedInUserEmail(), "INSERT_OR_UPDATE", "Inserting or updating entry with key %s into %s".formatted(keySelector.apply(data), filename));
+        Logger.logNow(AuthenticationService.getLoggedInUserEmail(), "INSERT_OR_UPDATE", "Inserting or updating entry with key %s into %s".formatted(keySelector.apply(data), filename));
 
         var file = getOrCreate(filename);
         var temp = File.createTempFile("repo_" + UUID.randomUUID().toString(), ".tmp");
 
-        Logger.logNow(Authentication.getLoggedInUserEmail(), "INSERT_OR_UPDATE", "Using temp file %s".formatted(temp.getAbsolutePath()));
+        Logger.logNow(AuthenticationService.getLoggedInUserEmail(), "INSERT_OR_UPDATE", "Using temp file %s".formatted(temp.getAbsolutePath()));
 
         String headerLine;
         var updated = false;
@@ -155,9 +155,9 @@ final class Repository {
 
             writer.flush();
 
-            Logger.logNow(Authentication.getLoggedInUserEmail(), "INSERT_OR_UPDATE", "Insert or update entry with key %s completed successfully.".formatted(keySelector.apply(data)));
+            Logger.logNow(AuthenticationService.getLoggedInUserEmail(), "INSERT_OR_UPDATE", "Insert or update entry with key %s completed successfully.".formatted(keySelector.apply(data)));
         } catch (Exception e) {
-            Logger.logNow(Authentication.getLoggedInUserEmail(), "INSERT_OR_UPDATE", "Error during insert or update entry with key %s: %s".formatted(keySelector.apply(data), e.getMessage()));
+            Logger.logNow(AuthenticationService.getLoggedInUserEmail(), "INSERT_OR_UPDATE", "Error during insert or update entry with key %s: %s".formatted(keySelector.apply(data), e.getMessage()));
             throw e;
         } finally {
             replaceFile(file, temp);
@@ -208,12 +208,12 @@ final class Repository {
 
         boolean foundAndDeleted = false;
 
-        Logger.logNow(Authentication.getLoggedInUserEmail(), "DELETE", "Deleting entry with key %s from %s".formatted(key, filename));
+        Logger.logNow(AuthenticationService.getLoggedInUserEmail(), "DELETE", "Deleting entry with key %s from %s".formatted(key, filename));
         
         var file = getOrCreate(filename);
         var temp = File.createTempFile("repo_" + UUID.randomUUID().toString(), ".tmp");
 
-        Logger.logNow(Authentication.getLoggedInUserEmail(), "DELETE", "Using temp file %s".formatted(temp.getAbsolutePath()));
+        Logger.logNow(AuthenticationService.getLoggedInUserEmail(), "DELETE", "Using temp file %s".formatted(temp.getAbsolutePath()));
 
         try (var reader = new BufferedReader(new FileReader(file));
              var writer = new BufferedWriter(new FileWriter(temp))) {
@@ -239,9 +239,9 @@ final class Repository {
 
             writer.flush();
 
-            Logger.logNow(Authentication.getLoggedInUserEmail(), "DELETE", "Delete entry with key %s completed successfully.".formatted(key));
+            Logger.logNow(AuthenticationService.getLoggedInUserEmail(), "DELETE", "Delete entry with key %s completed successfully.".formatted(key));
         } catch (Exception e) {
-            Logger.logNow(Authentication.getLoggedInUserEmail(), "DELETE", "Error during delete entry with key %s: %s".formatted(key, e.getMessage()));
+            Logger.logNow(AuthenticationService.getLoggedInUserEmail(), "DELETE", "Error during delete entry with key %s: %s".formatted(key, e.getMessage()));
             throw e;
         } finally {
             replaceFile(file, temp);
